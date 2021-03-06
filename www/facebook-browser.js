@@ -11,7 +11,7 @@ exports.getLoginStatus = function getLoginStatus (force, s, f) {
   }
   if (!__fbSdkReady) {
     return __fbCallbacks.push(function() {
-      getLoginStatus(s, f);
+      getLoginStatus(force, s, f);
     });
   }
 
@@ -153,6 +153,12 @@ exports.isDataAccessExpired = function isDataAccessExpired (s, f) {
 }
 
 exports.getAccessToken = function getAccessToken (s, f) {
+  if (!__fbSdkReady) {
+    return __fbCallbacks.push(function() {
+      getAccessToken(s, f);
+    });
+  }
+  
   var response = FB.getAccessToken()
   if (response) {
     if(s) s(response);
@@ -217,7 +223,7 @@ exports.api = function api (graphPath, permissions, httpMethod, s, f) {
   httpMethod = httpMethod || 'get'
   if (!__fbSdkReady) {
     return __fbCallbacks.push(function() {
-      api(graphPath, permissions, s, f);
+      api(graphPath, permissions, httpMethod, s, f);
     });
   }
 
