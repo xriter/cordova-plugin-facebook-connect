@@ -1,3 +1,16 @@
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/releases/tag/v2.1.0) (2021-03-06)
+
+## Features
+
+* Updated the `getLoginStatus` method to add the `force` parameter, which allows for fetching fresh data from Facebook rather than using previously cached login information (closes [#47](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/47))
+* Added new `isDataAccessExpired` and `reauthorizeDataAccess` methods to allow for detecting when data access has expired, and to then request reauthorization from the user (closes [#46](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/46))
+
+## Bug Fixes
+
+* Updated the `setAutoLogAppEventsEnabled`, `setAdvertiserIDCollectionEnabled`, and `setAdvertiserTrackingEnabled` methods on iOS to properly handle booleans passed in the `enabled` argument
+* Updated the `getAccessToken` and `api` methods on the browser platform to fix an issue that caused errors when the plugin was used before the Facebook SDK was available
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/releases/tag/v2.0.0) (2021-02-25)
 
