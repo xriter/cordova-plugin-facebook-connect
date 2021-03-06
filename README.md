@@ -100,7 +100,9 @@ Failure function returns an error String if any passed permissions are not grant
 
 ### Get Status
 
-`facebookConnectPlugin.getLoginStatus(Function success, Function failure)`
+`facebookConnectPlugin.getLoginStatus(Boolean force, Function success, Function failure)`
+
+Setting the force parameter to true clears any previously cached status and fetches fresh data from Facebook.
 
 Success function returns an Object like:
 
@@ -116,7 +118,40 @@ Success function returns an Object like:
 	status: "connected"
 }
 ```
+
 For more information see: [Facebook Documentation](https://developers.facebook.com/docs/reference/javascript/FB.getLoginStatus)
+
+### Check if data access is expired
+
+`facebookConnectPlugin.isDataAccessExpired(Function success, Function failure)`
+
+Success function returns a String indicating if data access is expired.
+
+Failure function returns an error String.
+
+For more information see: [Facebook Documentation](https://developers.facebook.com/docs/facebook-login/auth-vs-data/#testing-when-access-to-user-data-expires)
+
+### Reauthorize data access
+
+`facebookConnectPlugin.reauthorizeDataAccess(Function success, Function failure)`
+
+Success function returns an Object like:
+
+	{
+		status: "connected",
+		authResponse: {
+			session_key: true,
+			accessToken: "<long string>",
+			expiresIn: 5183979,
+			sig: "...",
+			secret: "...",
+			userID: "634565435"
+		}
+	}
+
+Failure function returns an error String.
+
+For more information see: [Facebook Documentation](https://developers.facebook.com/docs/facebook-login/auth-vs-data/#data-access-expiration)
 
 ### Show a Dialog
 
@@ -256,7 +291,7 @@ For a more instructive example change the above `fbLoginSuccess` to;
 ```js
 var fbLoginSuccess = function (userData) {
   console.log("UserInfo: ", userData);
-  facebookConnectPlugin.getLoginStatus(function onLoginStatus (status) {
+  facebookConnectPlugin.getLoginStatus(false, function onLoginStatus (status) {
     console.log("current status: ", status);
     facebookConnectPlugin.showDialog({
       method: "share"

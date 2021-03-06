@@ -3,16 +3,21 @@ var __fbSdkReady = false;
 var __fbCallbacks = [];
 /* */
 
-exports.getLoginStatus = function getLoginStatus (s, f) {
+exports.getLoginStatus = function getLoginStatus (force, s, f) {
+  if (typeof force === 'function') {
+    s = force;
+    f = s;
+    force = false;
+  }
   if (!__fbSdkReady) {
     return __fbCallbacks.push(function() {
-      getLoginStatus(s, f);
+      getLoginStatus(force, s, f);
     });
   }
 
   FB.getLoginStatus(function (response) {
     if(s) s(response);
-  })
+  }, force)
 }
 
 exports.showDialog = function showDialog (options, s, f) {
@@ -125,7 +130,57 @@ exports.checkHasCorrectPermissions = function checkHasCorrectPermissions (permis
   }
 }
 
+exports.isDataAccessExpired = function isDataAccessExpired (s, f) {
+  if (!__fbSdkReady) {
+    return __fbCallbacks.push(function() {
+      isDataAccessExpired(s, f);
+    });
+  }
+
+  var accessToken = FB.getAccessToken()
+  if (accessToken) {
+    FB.getLoginStatus(function (response) {
+      if(!response.authResponse || !response.authResponse.data_access_expiration_time) {
+        if(f) f('Data access expiration time not available.');
+      } else {
+        var isExpired = response.authResponse.data_access_expiration_time < new Date().getTime() / 1000;
+        if(s) s(isExpired ? 'true' : 'false');
+      }
+    })
+  } else {
+    if(f) f('Session not open.');
+  }
+}
+
+exports.reauthorizeDataAccess = function reauthorizeDataAccess (s, f) {
+  if (!__fbSdkReady) {
+    return __fbCallbacks.push(function() {
+      reauthorizeDataAccess(s, f);
+    });
+  }
+  
+  FB.login(function (response) {
+    if (response.authResponse) {
+      if(s) s(response);
+    } else if (response) {
+      if (response.status) {
+        if(f) f(response.status.message);
+      } else {
+        if(f) f(response);
+      }
+    } else {
+      if(f) f('No response');
+    }
+  }, { auth_type: 'reauthorize' })
+}
+
 exports.getAccessToken = function getAccessToken (s, f) {
+  if (!__fbSdkReady) {
+    return __fbCallbacks.push(function() {
+      getAccessToken(s, f);
+    });
+  }
+  
   var response = FB.getAccessToken()
   if (response) {
     if(s) s(response);
@@ -190,7 +245,7 @@ exports.api = function api (graphPath, permissions, httpMethod, s, f) {
   httpMethod = httpMethod || 'get'
   if (!__fbSdkReady) {
     return __fbCallbacks.push(function() {
-      api(graphPath, permissions, s, f);
+      api(graphPath, permissions, httpMethod, s, f);
     });
   }
 
