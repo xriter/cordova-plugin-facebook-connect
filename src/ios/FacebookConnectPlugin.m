@@ -103,21 +103,21 @@
 }
 
 - (void)setAutoLogAppEventsEnabled:(CDVInvokedUrlCommand *)command {
-    BOOL enabled = [command.arguments objectAtIndex:0];
+    BOOL enabled = [[command argumentAtIndex:0] boolValue];
     [FBSDKSettings setAutoLogAppEventsEnabled:enabled];
     CDVPluginResult *res = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
 }
 
 - (void)setAdvertiserIDCollectionEnabled:(CDVInvokedUrlCommand *)command {
-    BOOL enabled = [command.arguments objectAtIndex:0];
+    BOOL enabled = [[command argumentAtIndex:0] boolValue];
     [FBSDKSettings setAdvertiserIDCollectionEnabled:enabled];
     CDVPluginResult *res = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
 }
 
 - (void)setAdvertiserTrackingEnabled:(CDVInvokedUrlCommand *)command {
-    BOOL enabled = [command.arguments objectAtIndex:0];
+    BOOL enabled = [[command argumentAtIndex:0] boolValue];
     [FBSDKSettings setAdvertiserTrackingEnabled:enabled];
     CDVPluginResult *res = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
