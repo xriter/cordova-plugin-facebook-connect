@@ -3,7 +3,12 @@ var __fbSdkReady = false;
 var __fbCallbacks = [];
 /* */
 
-exports.getLoginStatus = function getLoginStatus (s, f) {
+exports.getLoginStatus = function getLoginStatus (force, s, f) {
+  if (typeof force === 'function') {
+    s = force;
+    f = s;
+    force = false;
+  }
   if (!__fbSdkReady) {
     return __fbCallbacks.push(function() {
       getLoginStatus(s, f);
@@ -12,7 +17,7 @@ exports.getLoginStatus = function getLoginStatus (s, f) {
 
   FB.getLoginStatus(function (response) {
     if(s) s(response);
-  })
+  }, force)
 }
 
 exports.showDialog = function showDialog (options, s, f) {

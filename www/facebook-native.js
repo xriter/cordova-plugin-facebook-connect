@@ -1,7 +1,12 @@
 var exec = require('cordova/exec')
 
-exports.getLoginStatus = function getLoginStatus (s, f) {
-  exec(s, f, 'FacebookConnectPlugin', 'getLoginStatus', [])
+exports.getLoginStatus = function getLoginStatus (force, s, f) {
+  if (typeof force === 'function') {
+    s = force;
+    f = s;
+    force = false;
+  }
+  exec(s, f, 'FacebookConnectPlugin', 'getLoginStatus', [force])
 }
 
 exports.showDialog = function showDialog (options, s, f) {

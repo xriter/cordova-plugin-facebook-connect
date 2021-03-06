@@ -266,7 +266,7 @@ public class ConnectPlugin extends CordovaPlugin {
             return true;
 
         } else if (action.equals("getLoginStatus")) {
-            callbackContext.success(getResponse());
+            executeGetLoginStatus(args, callbackContext);
             return true;
 
         } else if (action.equals("getAccessToken")) {
@@ -645,6 +645,24 @@ public class ConnectPlugin extends CordovaPlugin {
         }
 
         callbackContext.success("All permissions have been accepted");
+    }
+
+    private void executeGetLoginStatus(JSONArray args, CallbackContext callbackContext) {
+        boolean force = args.optBoolean(0);
+        if (force) {
+            AccessToken.refreshCurrentAccessTokenAsync(new AccessToken.AccessTokenRefreshCallback() {
+                @Override
+                public void OnTokenRefreshed(AccessToken accessToken) {
+                    callbackContext.success(getResponse());
+                }
+                @Override
+                public void OnTokenRefreshFailed(FacebookException exception) {
+                    callbackContext.success(getResponse());
+                }
+            });
+        } else {
+            callbackContext.success(getResponse());
+        }
     }
 
     private void enableHybridAppEvents() {
