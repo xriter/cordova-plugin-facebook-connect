@@ -1,6 +1,6 @@
 var exec = require('cordova/exec')
 
-exports.getLoginStatus = function getLoginStatus (force, s, f) {
+exports.getLoginStatus = function (force, s, f) {
   if (typeof force === 'function') {
     s = force;
     f = s;
@@ -9,19 +9,19 @@ exports.getLoginStatus = function getLoginStatus (force, s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'getLoginStatus', [force])
 }
 
-exports.showDialog = function showDialog (options, s, f) {
+exports.showDialog = function (options, s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'showDialog', [options])
 }
 
-exports.login = function login (permissions, s, f) {
+exports.login = function (permissions, s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'login', permissions)
 }
 
-exports.checkHasCorrectPermissions = function checkHasCorrectPermissions (permissions, s, f) {
+exports.checkHasCorrectPermissions = function (permissions, s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'checkHasCorrectPermissions', permissions)
 }
 
-exports.isDataAccessExpired = function isDataAccessExpired (s, f) {
+exports.isDataAccessExpired = function (s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'isDataAccessExpired', [])
 }
 
@@ -37,7 +37,7 @@ exports.setAdvertiserTrackingEnabled = function (enabled, s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'setAdvertiserTrackingEnabled', [enabled]);
 }
 
-exports.logEvent = function logEvent (name, params, valueToSum, s, f) {
+exports.logEvent = function (name, params, valueToSum, s, f) {
   // Prevent NSNulls getting into iOS, messes up our [command.argument count]
   if (!params && !valueToSum) {
     exec(s, f, 'FacebookConnectPlugin', 'logEvent', [name])
@@ -50,7 +50,7 @@ exports.logEvent = function logEvent (name, params, valueToSum, s, f) {
   }
 }
 
-exports.logPurchase = function logPurchase (value, currency, params, s, f) {
+exports.logPurchase = function (value, currency, params, s, f) {
   if (typeof params === 'function') {
     s = params;
     f = s;
@@ -63,15 +63,15 @@ exports.logPurchase = function logPurchase (value, currency, params, s, f) {
   }
 }
 
-exports.getAccessToken = function getAccessToken (s, f) {
+exports.getAccessToken = function (s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'getAccessToken', [])
 }
 
-exports.logout = function logout (s, f) {
+exports.logout = function (s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'logout', [])
 }
 
-exports.api = function api (graphPath, permissions, httpMethod, s, f) {
+exports.api = function (graphPath, permissions, httpMethod, s, f) {
   permissions = permissions || []
   if (typeof httpMethod === 'function') {
     s = httpMethod;
