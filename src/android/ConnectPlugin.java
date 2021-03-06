@@ -68,6 +68,7 @@ public class ConnectPlugin extends CordovaPlugin {
     private CallbackManager callbackManager;
     private AppEventsLogger logger;
     private CallbackContext loginContext = null;
+    private CallbackContext reauthorizeContext = null;
     private CallbackContext showDialogContext = null;
     private CallbackContext lastGraphContext = null;
     private String lastGraphRequestMethod = null;
@@ -119,6 +120,11 @@ public class ConnectPlugin extends CordovaPlugin {
                             loginContext.success(getResponse());
                             loginContext = null;
                         }
+
+                        if (reauthorizeContext != null) {
+                            reauthorizeContext.success(getResponse());
+                            reauthorizeContext = null;
+                        }
                     }
                 }).executeAsync();
             }
@@ -126,13 +132,28 @@ public class ConnectPlugin extends CordovaPlugin {
             @Override
             public void onCancel() {
                 FacebookOperationCanceledException e = new FacebookOperationCanceledException();
-                handleError(e, loginContext);
+                if (loginContext != null) {
+                    handleError(e, loginContext);
+                    loginContext = null;
+                }
+                if (reauthorizeContext != null) {
+                    handleError(e, reauthorizeContext);
+                    reauthorizeContext = null;
+                }
             }
 
             @Override
             public void onError(FacebookException e) {
                 Log.e("Activity", String.format("Error: %s", e.toString()));
-                handleError(e, loginContext);
+                if (loginContext != null) {
+                    handleError(e, loginContext);
+                    loginContext = null;
+                }
+                if (reauthorizeContext != null) {
+                    handleError(e, reauthorizeContext);
+                    reauthorizeContext = null;
+                }
+
                 // Sign-out current instance in case token is still valid for previous user
                 if (e instanceof FacebookAuthorizationException) {
                     if (AccessToken.getCurrentAccessToken() != null) {
@@ -256,6 +277,10 @@ public class ConnectPlugin extends CordovaPlugin {
             } else {
                 callbackContext.error("Session not open.");
             }
+            return true;
+
+        } else if (action.equals("reauthorizeDataAccess")) {
+            executeReauthorizeDataAccess(args, callbackContext);
             return true;
 
         } else if (action.equals("logout")) {
@@ -645,6 +670,19 @@ public class ConnectPlugin extends CordovaPlugin {
         }
 
         callbackContext.success("All permissions have been accepted");
+    }
+
+    private void executeReauthorizeDataAccess(JSONArray args, CallbackContext callbackContext) throws JSONException {
+        lastGraphContext = null;
+        lastGraphRequestMethod = null;
+
+        reauthorizeContext = callbackContext;
+        PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
+        pr.setKeepCallback(true);
+        reauthorizeContext.sendPluginResult(pr);
+
+        cordova.setActivityResultCallback(this);
+        LoginManager.getInstance().reauthorizeDataAccess(cordova.getActivity());
     }
 
     private void executeGetLoginStatus(JSONArray args, CallbackContext callbackContext) {

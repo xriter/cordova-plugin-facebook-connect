@@ -129,6 +129,30 @@ Success function returns a String indicating if data access is expired.
 
 Failure function returns an error String.
 
+For more information see: [Facebook Documentation](https://developers.facebook.com/docs/facebook-login/auth-vs-data/#testing-when-access-to-user-data-expires)
+
+### Reauthorize data access
+
+`facebookConnectPlugin.reauthorizeDataAccess(Function success, Function failure)`
+
+Success function returns an Object like:
+
+	{
+		status: "connected",
+		authResponse: {
+			session_key: true,
+			accessToken: "<long string>",
+			expiresIn: 5183979,
+			sig: "...",
+			secret: "...",
+			userID: "634565435"
+		}
+	}
+
+Failure function returns an error String.
+
+For more information see: [Facebook Documentation](https://developers.facebook.com/docs/facebook-login/auth-vs-data/#data-access-expiration)
+
 ### Show a Dialog
 
 `facebookConnectPlugin.showDialog(Object options, Function success, Function failure)`

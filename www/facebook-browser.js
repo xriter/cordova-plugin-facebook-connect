@@ -152,6 +152,28 @@ exports.isDataAccessExpired = function isDataAccessExpired (s, f) {
   }
 }
 
+exports.reauthorizeDataAccess = function reauthorizeDataAccess (s, f) {
+  if (!__fbSdkReady) {
+    return __fbCallbacks.push(function() {
+      reauthorizeDataAccess(s, f);
+    });
+  }
+  
+  FB.login(function (response) {
+    if (response.authResponse) {
+      if(s) s(response);
+    } else if (response) {
+      if (response.status) {
+        if(f) f(response.status.message);
+      } else {
+        if(f) f(response);
+      }
+    } else {
+      if(f) f('No response');
+    }
+  }, { auth_type: 'reauthorize' })
+}
+
 exports.getAccessToken = function getAccessToken (s, f) {
   if (!__fbSdkReady) {
     return __fbCallbacks.push(function() {

@@ -25,6 +25,10 @@ exports.isDataAccessExpired = function (s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'isDataAccessExpired', [])
 }
 
+exports.reauthorizeDataAccess = function (s, f) {
+  exec(s, f, 'FacebookConnectPlugin', 'reauthorizeDataAccess', [])
+}
+
 exports.setAutoLogAppEventsEnabled = function (enabled, s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'setAutoLogAppEventsEnabled', [enabled]);
 }

@@ -27,6 +27,7 @@
 - (void)login:(CDVInvokedUrlCommand *)command;
 - (void)checkHasCorrectPermissions:(CDVInvokedUrlCommand *)command;
 - (void)isDataAccessExpired:(CDVInvokedUrlCommand *)command;
+- (void)reauthorizeDataAccess:(CDVInvokedUrlCommand *)command;
 - (void)logout:(CDVInvokedUrlCommand *)command;
 - (void)graphApi:(CDVInvokedUrlCommand *)command;
 - (void)showDialog:(CDVInvokedUrlCommand *)command;
