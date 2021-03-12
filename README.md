@@ -212,7 +212,7 @@ Success function returns an Object.
 
 Failure function returns an error String.
 
-**Note: "In order to make calls to the Graph API on behalf of a user, the user has to be logged into your app using Facebook login."**
+**Note: "In order to make calls to the Graph API on behalf of a user, the user has to be logged into your app using Facebook login, and you must include the access_token parameter in your requestPath. "**
 
 For more information see:
 
@@ -307,13 +307,13 @@ var fbLoginSuccess = function (userData) {
 Using the graph api this is a very simple task:
 
 ```js
-facebookConnectPlugin.api("<user-id>/?fields=id,email", ["user_birthday"],
+facebookConnectPlugin.api("me/?fields=id,birthday&access_token=" + myAccessToken, ["user_birthday"],
   function onSuccess (result) {
     console.log("Result: ", result);
     /* logs:
       {
         "id": "000000123456789",
-        "email": "myemail@example.com"
+        "birthday": "01/01/1985"
       }
     */
   }, function onError (error) {
