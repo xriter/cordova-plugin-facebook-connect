@@ -40,7 +40,7 @@ module.exports = function (context) {
   }
   
   if(!FACEBOOK_IOS_SDK_VERSION) {
-    FACEBOOK_IOS_SDK_VERSION = '9.0.1'
+    FACEBOOK_IOS_SDK_VERSION = '9.1.0'
   }
 
   var podfilePath = './platforms/ios/Podfile'
