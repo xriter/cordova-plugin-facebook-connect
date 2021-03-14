@@ -193,7 +193,7 @@ Send Dialog:
 
 For options information see: [Facebook share dialog documentation](https://developers.facebook.com/docs/sharing/reference/share-dialog) [Facebook send dialog documentation](https://developers.facebook.com/docs/sharing/reference/send-dialog)
 
-Success function returns an Object with `postId` as String or `from` and `to` information when doing `apprequest`.
+Success function returns an Object or `from` and `to` information when doing `apprequest`.
 Failure function returns an error String.
 
 ### The Graph API
@@ -295,8 +295,8 @@ var fbLoginSuccess = function (userData) {
     console.log("current status: ", status);
     facebookConnectPlugin.showDialog({
       method: "share"
-    }, function onShareSuccess (result) {
-      console.log("Posted. ", result);
+    }, function onShareSuccess () {
+      console.log("Posted.");
     });
   });
 };
@@ -318,23 +318,6 @@ facebookConnectPlugin.api("me/?fields=id,birthday&access_token=" + myAccessToken
     */
   }, function onError (error) {
     console.error("Failed: ", error);
-  }
-);
-```
-
-### Publish a Photo
-
-Send a photo to a user's feed
-
-```js
-facebookConnectPlugin.showDialog({
-    method: "share",
-    name:'Test Post',
-    message:'First photo post'
-  }, function (response) {
-    console.log(response)
-  }, function (response) {
-    console.log(response)
   }
 );
 ```
