@@ -1,3 +1,18 @@
+<a name="2.2.0"></a>
+# [2.2.0](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/releases/tag/v2.2.0) (2021-04-06)
+
+## Features
+
+* Updated the Facebook SDK to 9.1.0 for Android and iOS
+
+## Bug Fixes
+
+* Added a hook to allow variables to be replaced in Podfile when using cordova-ios 5 (closes [#52](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/52))
+
+## Documentation
+
+* Updated README to make it clear that an access token must be included when using the `api` method (closes [#50](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/50))
+
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/releases/tag/v2.1.0) (2021-03-06)
 
