@@ -29,7 +29,7 @@
 
     <engines>
         <engine name="cordova-android" version=">=7.0.0" />
-        <engine name="cordova-ios" version=">=5.0.0" />
+        <engine name="cordova-ios" version=">=6.0.0" />
     </engines>
 
     <!-- android -->
@@ -184,7 +184,6 @@
             </pods>
         </podspec>
 
-        <hook type="before_plugin_install" src="scripts/ios/before_plugin_install.js" />
         <hook type="after_prepare" src="scripts/ios/after_prepare.js" />
     </platform>
 

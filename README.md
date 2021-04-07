@@ -49,7 +49,7 @@ If you are looking to test the plugin, would like to reproduce a bug or build is
 
   * Cordova >= 5.0.0
   * cordova-android >= 7.0.0
-  * cordova-ios >= 5.0.0
+  * cordova-ios >= 6.0.0
   * cordova-browser >= 3.6
 
 ## Facebook SDK
@@ -333,8 +333,6 @@ $ cordova plugin add cordova-plugin-facebook-connect --save --variable APP_ID="1
 ```
 
 Please check [this repo](https://github.com/msencer/fb_hybrid_app_events_sample) for an example app using this feature.
-
-**NOTE(iOS):** This feature only works with WKWebView so if using an old version of Cordova, an additional plugin (e.g cordova-plugin-wkwebview-engine) is needed.
 
 ## GDPR Compliance
 

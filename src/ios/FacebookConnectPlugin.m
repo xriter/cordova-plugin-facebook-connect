@@ -648,10 +648,6 @@
 
 /*
  * Enable the hybrid app events for the webview.
- * This feature only works with WKWebView so until
- * Cordova iOS 5 is relased
- * (https://cordova.apache.org/news/2018/08/01/future-cordova-ios-webview.html),
- * an additional plugin (e.g cordova-plugin-wkwebview-engine) is needed.
  */
 - (void)enableHybridAppEvents {
     if ([self.webView isMemberOfClass:[WKWebView class]]){
