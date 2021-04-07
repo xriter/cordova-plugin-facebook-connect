@@ -193,7 +193,7 @@ Send Dialog:
 
 For options information see: [Facebook share dialog documentation](https://developers.facebook.com/docs/sharing/reference/share-dialog) [Facebook send dialog documentation](https://developers.facebook.com/docs/sharing/reference/send-dialog)
 
-Success function returns an Object with `postId` as String or `from` and `to` information when doing `apprequest`.
+Success function returns an Object or `from` and `to` information when doing `apprequest`.
 Failure function returns an error String.
 
 ### The Graph API
@@ -212,7 +212,7 @@ Success function returns an Object.
 
 Failure function returns an error String.
 
-**Note: "In order to make calls to the Graph API on behalf of a user, the user has to be logged into your app using Facebook login."**
+**Note: "In order to make calls to the Graph API on behalf of a user, the user has to be logged into your app using Facebook login, and you must include the access_token parameter in your requestPath. "**
 
 For more information see:
 
@@ -295,8 +295,8 @@ var fbLoginSuccess = function (userData) {
     console.log("current status: ", status);
     facebookConnectPlugin.showDialog({
       method: "share"
-    }, function onShareSuccess (result) {
-      console.log("Posted. ", result);
+    }, function onShareSuccess () {
+      console.log("Posted.");
     });
   });
 };
@@ -307,34 +307,17 @@ var fbLoginSuccess = function (userData) {
 Using the graph api this is a very simple task:
 
 ```js
-facebookConnectPlugin.api("<user-id>/?fields=id,email", ["user_birthday"],
+facebookConnectPlugin.api("me/?fields=id,birthday&access_token=" + myAccessToken, ["user_birthday"],
   function onSuccess (result) {
     console.log("Result: ", result);
     /* logs:
       {
         "id": "000000123456789",
-        "email": "myemail@example.com"
+        "birthday": "01/01/1985"
       }
     */
   }, function onError (error) {
     console.error("Failed: ", error);
-  }
-);
-```
-
-### Publish a Photo
-
-Send a photo to a user's feed
-
-```js
-facebookConnectPlugin.showDialog({
-    method: "share",
-    name:'Test Post',
-    message:'First photo post'
-  }, function (response) {
-    console.log(response)
-  }, function (response) {
-    console.log(response)
   }
 );
 ```
