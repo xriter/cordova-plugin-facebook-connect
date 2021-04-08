@@ -75,11 +75,9 @@ Success function returns an Object like:
 	{
 		status: "connected",
 		authResponse: {
-			session_key: true,
 			accessToken: "<long string>",
-			expiresIn: 5183979,
-			sig: "...",
-			secret: "...",
+			data_access_expiration_time: "1623680244",
+			expiresIn: "5183979",
 			userID: "634565435"
 		}
 	}
@@ -109,11 +107,10 @@ Success function returns an Object like:
 ```
 {
 	authResponse: {
-		userID: "12345678912345",
 		accessToken: "kgkh3g42kh4g23kh4g2kh34g2kg4k2h4gkh3g4k2h4gk23h4gk2h34gk234gk2h34AndSoOn",
-		session_Key: true,
+		data_access_expiration_time: "1623680244",
 		expiresIn: "5183738",
-		sig: "..."
+		userID: "12345678912345"
 	},
 	status: "connected"
 }
@@ -140,11 +137,9 @@ Success function returns an Object like:
 	{
 		status: "connected",
 		authResponse: {
-			session_key: true,
 			accessToken: "<long string>",
-			expiresIn: 5183979,
-			sig: "...",
-			secret: "...",
+			data_access_expiration_time: "1623680244",
+			expiresIn: "5183979",
 			userID: "634565435"
 		}
 	}

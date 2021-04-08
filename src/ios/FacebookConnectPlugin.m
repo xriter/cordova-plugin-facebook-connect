@@ -580,20 +580,23 @@
     NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
     FBSDKAccessToken *token = [FBSDKAccessToken currentAccessToken];
 
+    NSTimeInterval dataAccessExpirationTimeInterval = token.dataAccessExpirationDate.timeIntervalSince1970;
+    NSString *dataAccessExpirationTime = @"0";
+    if (dataAccessExpirationTimeInterval > 0) {
+        dataAccessExpirationTime = [NSString stringWithFormat:@"%0.0f", dataAccessExpirationTimeInterval];
+    }
+
     NSTimeInterval expiresTimeInterval = token.expirationDate.timeIntervalSinceNow;
     NSString *expiresIn = @"0";
     if (expiresTimeInterval > 0) {
         expiresIn = [NSString stringWithFormat:@"%0.0f", expiresTimeInterval];
     }
 
-
     response[@"status"] = @"connected";
     response[@"authResponse"] = @{
                                   @"accessToken" : token.tokenString ? token.tokenString : @"",
+                                  @"data_access_expiration_time" : dataAccessExpirationTime,
                                   @"expiresIn" : expiresIn,
-                                  @"secret" : @"...",
-                                  @"session_key" : [NSNumber numberWithBool:YES],
-                                  @"sig" : @"...",
                                   @"userID" : token.userID ? token.userID : @""
                                   };
 
