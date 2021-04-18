@@ -76,6 +76,11 @@
 #pragma mark - Cordova commands
 
 - (void)getLoginStatus:(CDVInvokedUrlCommand *)command {
+    if (self.loginTracking == FBSDKLoginTrackingLimited) {
+        [self returnLimitedLoginMethodError:command.callbackId];
+        return;
+    }
+    
     BOOL force = [[command argumentAtIndex:0] boolValue];
     if (force) {
         [FBSDKAccessToken refreshCurrentAccessToken:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
@@ -91,6 +96,11 @@
 }
 
 - (void)getAccessToken:(CDVInvokedUrlCommand *)command {
+    if (self.loginTracking == FBSDKLoginTrackingLimited) {
+        [self returnLimitedLoginMethodError:command.callbackId];
+        return;
+    }
+    
     // Return access token if available
     CDVPluginResult *pluginResult;
     // Check if the session is open or not
@@ -292,6 +302,10 @@
 
 - (void) checkHasCorrectPermissions:(CDVInvokedUrlCommand*)command
 {
+    if (self.loginTracking == FBSDKLoginTrackingLimited) {
+        [self returnLimitedLoginMethodError:command.callbackId];
+        return;
+    }
 
     NSArray *permissions = nil;
 
@@ -330,6 +344,11 @@
 }
 
 - (void) reauthorizeDataAccess:(CDVInvokedUrlCommand *)command {
+    if (self.loginTracking == FBSDKLoginTrackingLimited) {
+        [self returnLimitedLoginMethodError:command.callbackId];
+        return;
+    }
+    
     if (self.loginManager == nil) {
         self.loginManager = [[FBSDKLoginManager alloc] init];
     }
@@ -485,6 +504,11 @@
 
 - (void) graphApi:(CDVInvokedUrlCommand *)command
 {
+    if (self.loginTracking == FBSDKLoginTrackingLimited) {
+        [self returnLimitedLoginMethodError:command.callbackId];
+        return;
+    }
+    
     CDVPluginResult *pluginResult;
     if (! [FBSDKAccessToken currentAccessToken]) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
@@ -603,6 +627,13 @@
 }
 
 #pragma mark - Utility methods
+
+- (void) returnLimitedLoginMethodError:(NSString *)callbackId {
+    NSString *methodErrorMessage = @"Method not available when using Limited Login";
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                     messageAsString:methodErrorMessage];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+}
 
 - (void) loginWithPermissions:(NSArray *)permissions withHandler:(FBSDKLoginManagerLoginResultBlock) handler {
     if (self.loginManager == nil) {
