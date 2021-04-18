@@ -17,10 +17,12 @@
 
 @property (strong, nonatomic) NSString* dialogCallbackId;
 @property (strong, nonatomic) FBSDKLoginManager *loginManager;
+@property (nonatomic, assign) FBSDKLoginTracking *loginTracking;
 @property (strong, nonatomic) NSString* gameRequestDialogCallbackId;
 @property (nonatomic, assign) BOOL applicationWasActivated;
 
 - (NSDictionary *)responseObject;
+- (NSDictionary *)limitedLoginResponseObject;
 - (NSDictionary*)parseURLParams:(NSString *)query;
 - (void)enableHybridAppEvents;
 @end
@@ -222,9 +224,10 @@
             permissions = @[];
         }
 
-        if (self.loginManager == nil) {
+        if (self.loginManager == nil || self.loginTracking == FBSDKLoginTrackingLimited) {
             self.loginManager = [[FBSDKLoginManager alloc] init];
         }
+        self.loginTracking = FBSDKLoginTrackingEnabled;
         [self.loginManager logInWithPermissions:permissions fromViewController:[self topMostController] handler:loginHandler];
         return;
     }
@@ -241,6 +244,50 @@
 
     [self loginWithPermissions:permissions withHandler:loginHandler];
 
+}
+
+- (void)loginWithLimitedTracking:(CDVInvokedUrlCommand *)command {
+    if ([command.arguments count] == 1) {
+        NSString *nonceErrorMessage = @"No nonce specified";
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                         messageAsString:nonceErrorMessage];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        return;
+    }
+
+    NSArray *permissions = [command argumentAtIndex:0];
+    NSArray *permissionsArray = @[];
+    NSString *nonce = [command argumentAtIndex:1];
+
+    if ([permissions count] > 0) {
+        permissionsArray = permissions;
+    }
+
+    FBSDKLoginManagerLoginResultBlock loginHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
+        if (error) {
+            // If the SDK has a message for the user, surface it.
+            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                                              messageAsString:errorMessage];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            return;
+        } else if (result.isCancelled) {
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                                              messageAsString:@"User cancelled."];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        } else {
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                          messageAsDictionary:[self limitedLoginResponseObject]];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
+    };
+
+    if (self.loginManager == nil || self.loginTracking == FBSDKLoginTrackingEnabled) {
+        self.loginManager = [FBSDKLoginManager new];
+    }
+    self.loginTracking = FBSDKLoginTrackingLimited;
+    FBSDKLoginConfiguration *configuration = [[FBSDKLoginConfiguration alloc] initWithPermissions:permissionsArray tracking:FBSDKLoginTrackingLimited nonce:nonce];
+    [self.loginManager logInFromViewController:[self topMostController] configuration:configuration completion:loginHandler];
 }
 
 - (void) checkHasCorrectPermissions:(CDVInvokedUrlCommand*)command
@@ -286,6 +333,7 @@
     if (self.loginManager == nil) {
         self.loginManager = [[FBSDKLoginManager alloc] init];
     }
+    self.loginTracking = FBSDKLoginTrackingEnabled;
     
     FBSDKLoginManagerLoginResultBlock reauthorizeHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
@@ -314,6 +362,9 @@
         // Close the session and clear the cache
         if (self.loginManager == nil) {
             self.loginManager = [[FBSDKLoginManager alloc] init];
+        }
+        if (self.loginTracking == nil) {
+            self.loginTracking = FBSDKLoginTrackingEnabled;
         }
 
         [self.loginManager logOut];
@@ -557,6 +608,7 @@
     if (self.loginManager == nil) {
         self.loginManager = [[FBSDKLoginManager alloc] init];
     }
+    self.loginTracking = FBSDKLoginTrackingEnabled;
 
     [self.loginManager logInWithPermissions:permissions fromViewController:[self topMostController] handler:handler];
 }
@@ -597,6 +649,29 @@
                                   @"userID" : token.userID ? token.userID : @""
                                   };
 
+
+    return [response copy];
+}
+
+- (NSDictionary *)limitedLoginResponseObject {
+
+    if (![FBSDKAuthenticationToken currentAuthenticationToken]) {
+        return @{@"status": @"unknown"};
+    }
+
+    NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
+    FBSDKAuthenticationToken *token = [FBSDKAuthenticationToken currentAuthenticationToken];
+
+    NSString *userID;
+    if ([FBSDKProfile currentProfile]) {
+        userID = [FBSDKProfile currentProfile].userID;
+    }
+
+    response[@"status"] = @"connected";
+    response[@"authResponse"] = @{
+                                  @"authenticationToken" : token.tokenString ? token.tokenString : @"",
+                                  @"userID" : userID ? userID : @""
+                                  };
 
     return [response copy];
 }

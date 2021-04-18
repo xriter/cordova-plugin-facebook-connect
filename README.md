@@ -86,6 +86,24 @@ Success function returns an Object like:
 
 Failure function returns an error String.
 
+### Limited Login (iOS Only)
+
+`facebookConnectPlugin.loginWithLimitedTracking(Array strings of permissions, String nonce, Function success, Function failure)`
+
+Success function returns an Object like:
+
+	{
+		status: "connected",
+		authResponse: {
+			authenticationToken: "<long string>",
+			userID: "634565435"
+		}
+	}
+
+Failure function returns an error String.
+
+See the [Facebook Developer documentation](https://developers.facebook.com/docs/facebook-login/limited-login/ios/) for more details.
+
 ### Logout
 
 `facebookConnectPlugin.logout(Function success, Function failure)`
