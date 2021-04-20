@@ -25,7 +25,7 @@
     <preference name="FACEBOOK_ADVERTISER_ID_COLLECTION" default="true" />
     <preference name="FACEBOOK_ANDROID_SDK_VERSION" default="9.1.0"/>
     <preference name="FACEBOOK_IOS_SDK_VERSION" default="9.1.0"/>
-    <preference name="FACEBOOK_BROWSER_SDK_VERSION" default="v9.0" />
+    <preference name="FACEBOOK_BROWSER_SDK_VERSION" default="v10.0" />
 
     <engines>
         <engine name="cordova-android" version=">=7.0.0" />
