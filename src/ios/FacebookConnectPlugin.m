@@ -771,7 +771,6 @@ void FBMethodSwizzle(Class c, SEL originalSelector) {
 
 + (void)load
 {
-    FBMethodSwizzle([self class], @selector(application:openURL:sourceApplication:annotation:));
     FBMethodSwizzle([self class], @selector(application:openURL:options:));
 }
 
@@ -791,7 +790,7 @@ void FBMethodSwizzle(Class c, SEL originalSelector) {
     return [self swizzled_application:application openURL:url options:options];
 }
 
-- (BOOL)noop_application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+- (BOOL)noop_application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
 {
     return NO;
 }
