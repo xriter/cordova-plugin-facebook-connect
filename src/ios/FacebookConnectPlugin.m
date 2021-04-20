@@ -21,7 +21,6 @@
 @property (nonatomic, assign) BOOL applicationWasActivated;
 
 - (NSDictionary *)responseObject;
-- (NSDictionary*)parseURLParams:(NSString *)query;
 - (void)enableHybridAppEvents;
 @end
 
@@ -603,46 +602,6 @@
 
     return [response copy];
 }
-
-/**
- * A method for parsing URL parameters.
- */
-- (NSDictionary*)parseURLParams:(NSString *)query {
-    NSString *regexStr = @"^(.+)\\[(.*)\\]$";
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:regexStr options:0 error:nil];
-
-    NSArray *pairs = [query componentsSeparatedByString:@"&"];
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    [pairs enumerateObjectsUsingBlock:
-     ^(NSString *pair, NSUInteger idx, BOOL *stop) {
-         NSArray *kv = [pair componentsSeparatedByString:@"="];
-
-         NSString *key = [kv[0] stringByRemovingPercentEncoding];
-         NSString *val = [kv[1] stringByRemovingPercentEncoding];
-
-         NSArray *matches = [regex matchesInString:key options:0 range:NSMakeRange(0, [key length])];
-         if ([matches count] > 0) {
-             for (NSTextCheckingResult *match in matches) {
-
-                 NSString *newKey = [key substringWithRange:[match rangeAtIndex:1]];
-
-                 if ([[params allKeys] containsObject:newKey]) {
-                     NSMutableArray *obj = [params objectForKey:newKey];
-                     [obj addObject:val];
-                     [params setObject:obj forKey:newKey];
-                 } else {
-                     NSMutableArray *obj = [NSMutableArray arrayWithObject:val];
-                     [params setObject:obj forKey:newKey];
-                 }
-             }
-         } else {
-             params[key] = val;
-         }
-         // params[kv[0]] = val;
-    }];
-    return params;
-}
-
 
 /*
  * Enable the hybrid app events for the webview.
