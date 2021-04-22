@@ -30,6 +30,7 @@
 - (void)isDataAccessExpired:(CDVInvokedUrlCommand *)command;
 - (void)reauthorizeDataAccess:(CDVInvokedUrlCommand *)command;
 - (void)logout:(CDVInvokedUrlCommand *)command;
+- (void)getCurrentProfile:(CDVInvokedUrlCommand *)command;
 - (void)graphApi:(CDVInvokedUrlCommand *)command;
 - (void)showDialog:(CDVInvokedUrlCommand *)command;
 - (void)getDeferredApplink:(CDVInvokedUrlCommand *) command;

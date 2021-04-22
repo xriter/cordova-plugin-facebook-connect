@@ -23,6 +23,7 @@
 
 - (NSDictionary *)responseObject;
 - (NSDictionary *)limitedLoginResponseObject;
+- (NSDictionary *)profileObject;
 - (NSDictionary*)parseURLParams:(NSString *)query;
 - (void)enableHybridAppEvents;
 @end
@@ -54,6 +55,8 @@
     }
 
     [[FBSDKApplicationDelegate sharedInstance] application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchOptions];
+    
+    [FBSDKProfile enableUpdatesOnAccessTokenChange:YES];
 }
 
 - (void) applicationDidBecomeActive:(NSNotification *) notification {
@@ -502,6 +505,21 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)getCurrentProfile:(CDVInvokedUrlCommand *)command {
+    [FBSDKProfile loadCurrentProfileWithCompletion:^(FBSDKProfile *profile, NSError *error) {
+        CDVPluginResult *pluginResult;
+        if (![FBSDKProfile currentProfile]) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                                          messageAsString:@"No current profile."];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                          messageAsDictionary:[self profileObject]];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
+    }];
+}
+
 - (void) graphApi:(CDVInvokedUrlCommand *)command
 {
     if (self.loginTracking == FBSDKLoginTrackingLimited) {
@@ -685,7 +703,6 @@
 }
 
 - (NSDictionary *)limitedLoginResponseObject {
-
     if (![FBSDKAuthenticationToken currentAuthenticationToken]) {
         return @{@"status": @"unknown"};
     }
@@ -704,6 +721,38 @@
                                   @"userID" : userID ? userID : @""
                                   };
 
+    return [response copy];
+}
+
+- (NSDictionary *)profileObject {
+    if ([FBSDKProfile currentProfile] == nil) {
+        return @{};
+    }
+    
+    NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
+    FBSDKProfile *profile = [FBSDKProfile currentProfile];
+    NSString *userID = profile.userID;
+    
+    response[@"userID"] = userID ? userID : @"";
+    
+    if (self.loginTracking == FBSDKLoginTrackingLimited) {
+        NSString *name = profile.name;
+        NSString *email = profile.email;
+        
+        if (name) {
+            response[@"name"] = name;
+        }
+        if (email) {
+            response[@"email"] = email;
+        }
+    } else {
+        NSString *firstName = profile.firstName;
+        NSString *lastName = profile.lastName;
+        
+        response[@"firstName"] = firstName ? firstName : @"";
+        response[@"lastName"] = lastName ? lastName : @"";
+    }
+    
     return [response copy];
 }
 

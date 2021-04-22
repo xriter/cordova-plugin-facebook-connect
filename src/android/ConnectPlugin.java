@@ -21,6 +21,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.FacebookAuthorizationException;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.applinks.AppLinkData;
 import com.facebook.login.LoginManager;
@@ -323,6 +324,10 @@ public class ConnectPlugin extends CordovaPlugin {
             executeDialog(args, callbackContext);
             return true;
 
+        } else if (action.equals("getCurrentProfile")) {
+            executeGetCurrentProfile(args, callbackContext);
+
+            return true;
         } else if (action.equals("graphApi")) {
             executeGraph(args, callbackContext);
 
@@ -473,6 +478,14 @@ public class ConnectPlugin extends CordovaPlugin {
 
         } else {
             callbackContext.error("Unsupported dialog method.");
+        }
+    }
+
+    private void executeGetCurrentProfile(JSONArray args, CallbackContext callbackContext) {
+        if (Profile.getCurrentProfile() == null) {
+            callbackContext.error("No current profile.");
+        } else {
+            callbackContext.success(getProfile());
         }
     }
 
@@ -893,6 +906,26 @@ public class ConnectPlugin extends CordovaPlugin {
 
         response += "\"errorMessage\": \"" + message + "\"}";
 
+        try {
+            return new JSONObject(response);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new JSONObject();
+    }
+    
+    public JSONObject getProfile() {
+        String response;
+        final Profile profile = Profile.getCurrentProfile();
+        if (profile == null) {
+            response = "{}";
+        } else {
+            response = "{"
+                + "\"userID\": \"" + profile.getId() + "\","
+                + "\"firstName\": \"" + profile.getFirstName() + "\","
+                + "\"lastName\": \"" + profile.getLastName() + "\""
+                + "}";
+        }
         try {
             return new JSONObject(response);
         } catch (JSONException e) {

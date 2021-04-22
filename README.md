@@ -108,6 +108,22 @@ See the [Facebook Developer documentation](https://developers.facebook.com/docs/
 
 `facebookConnectPlugin.logout(Function success, Function failure)`
 
+### Get Current Profile
+
+`facebookConnectPlugin.getCurrentProfile(Function success, Function failure)`
+
+Success function returns an Object like:
+
+	{
+		userID: "634565435",
+		firstName: "Woodrow",
+		lastName: "Derenberger"
+	}
+
+**Note: The profile object contains a different set of properties when using Limited Login on iOS.**
+
+Failure function returns an error String.
+
 ### Check permissions
 
 `facebookConnectPlugin.checkHasCorrectPermissions(Array strings of permissions, Function success, Function failure)`

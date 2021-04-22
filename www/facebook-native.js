@@ -83,6 +83,10 @@ exports.logout = function (s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'logout', [])
 }
 
+exports.getCurrentProfile = function (s, f) {
+  exec(s, f, 'FacebookConnectPlugin', 'getCurrentProfile', [])
+}
+
 exports.api = function (graphPath, permissions, httpMethod, s, f) {
   permissions = permissions || []
   if (typeof httpMethod === 'function') {
