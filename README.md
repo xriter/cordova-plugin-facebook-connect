@@ -96,6 +96,7 @@ Success function returns an Object like:
 		status: "connected",
 		authResponse: {
 			authenticationToken: "<long string>",
+			nonce: "foo",
 			userID: "634565435"
 		}
 	}

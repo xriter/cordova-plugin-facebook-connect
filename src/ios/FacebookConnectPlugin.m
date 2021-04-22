@@ -718,6 +718,7 @@
     response[@"status"] = @"connected";
     response[@"authResponse"] = @{
                                   @"authenticationToken" : token.tokenString ? token.tokenString : @"",
+                                  @"nonce" : token.nonce ? token.nonce : @"",
                                   @"userID" : userID ? userID : @""
                                   };
 
