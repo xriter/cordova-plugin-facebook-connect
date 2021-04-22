@@ -1,3 +1,12 @@
+<a name="2.3.0"></a>
+# [2.3.0](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/releases/tag/v2.3.0) (2021-04-21)
+
+## Features
+
+* Updated the Facebook SDK to 9.1.1 for Android and 9.2.0 for iOS
+* Added new `loginWithLimitedTracking` method to allow for using Limited Login on iOS (closes [#51](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/51))
+* Added new `getCurrentProfile` method to support retrieving profile information for the currently logged in user
+
 <a name="2.2.0"></a>
 # [2.2.0](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/releases/tag/v2.2.0) (2021-04-06)
 

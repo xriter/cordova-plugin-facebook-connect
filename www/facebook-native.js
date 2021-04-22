@@ -17,6 +17,14 @@ exports.login = function (permissions, s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'login', permissions)
 }
 
+exports.loginWithLimitedTracking = function (permissions, nonce, s, f) {
+  if (!nonce) {
+    exec(s, f, 'FacebookConnectPlugin', 'loginWithLimitedTracking', [permissions])
+  } else {
+    exec(s, f, 'FacebookConnectPlugin', 'loginWithLimitedTracking', [permissions, nonce])
+  }
+}
+
 exports.checkHasCorrectPermissions = function (permissions, s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'checkHasCorrectPermissions', permissions)
 }
@@ -73,6 +81,10 @@ exports.getAccessToken = function (s, f) {
 
 exports.logout = function (s, f) {
   exec(s, f, 'FacebookConnectPlugin', 'logout', [])
+}
+
+exports.getCurrentProfile = function (s, f) {
+  exec(s, f, 'FacebookConnectPlugin', 'getCurrentProfile', [])
 }
 
 exports.api = function (graphPath, permissions, httpMethod, s, f) {

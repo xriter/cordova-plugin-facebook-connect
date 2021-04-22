@@ -25,10 +25,12 @@
 - (void)logEvent:(CDVInvokedUrlCommand *)command;
 - (void)logPurchase:(CDVInvokedUrlCommand *)command;
 - (void)login:(CDVInvokedUrlCommand *)command;
+- (void)loginWithLimitedTracking:(CDVInvokedUrlCommand *)command;
 - (void)checkHasCorrectPermissions:(CDVInvokedUrlCommand *)command;
 - (void)isDataAccessExpired:(CDVInvokedUrlCommand *)command;
 - (void)reauthorizeDataAccess:(CDVInvokedUrlCommand *)command;
 - (void)logout:(CDVInvokedUrlCommand *)command;
+- (void)getCurrentProfile:(CDVInvokedUrlCommand *)command;
 - (void)graphApi:(CDVInvokedUrlCommand *)command;
 - (void)showDialog:(CDVInvokedUrlCommand *)command;
 - (void)getDeferredApplink:(CDVInvokedUrlCommand *) command;
