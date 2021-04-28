@@ -1,3 +1,16 @@
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/releases/tag/v3.0.0)
+
+## Breaking Changes
+
+* Dropped support for cordova-ios 5 (closes [#40](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/40))
+* Dropped support for iOS 8 and below (closes [#41](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/41))
+
+## Features
+
+* Updated the Facebook JavaScript SDK used by the browser platform to v10.0
+* Updated the object returned by methods such as login to remove the `secret`, `session_key`, and `sig` properties, and add the new `data_access_expiration_time` property (closes [#49](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/49))
+
 <a name="2.3.0"></a>
 # [2.3.0](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/releases/tag/v2.3.0) (2021-04-21)
 
