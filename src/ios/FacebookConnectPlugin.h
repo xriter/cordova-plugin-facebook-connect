@@ -17,6 +17,8 @@
 #import "AppDelegate.h"
 
 @interface FacebookConnectPlugin : CDVPlugin <FBSDKSharingDelegate, FBSDKGameRequestDialogDelegate>
+- (void)getApplicationId:(CDVInvokedUrlCommand *)command;
+- (void)getApplicationName:(CDVInvokedUrlCommand *)command;
 - (void)getLoginStatus:(CDVInvokedUrlCommand *)command;
 - (void)getAccessToken:(CDVInvokedUrlCommand *)command;
 - (void)setAutoLogAppEventsEnabled:(CDVInvokedUrlCommand *)command;

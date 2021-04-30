@@ -77,6 +77,18 @@
 
 #pragma mark - Cordova commands
 
+- (void)getApplicationId:(CDVInvokedUrlCommand *)command {
+    NSString *appID = FBSDKSettings.appID;
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:appID];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)getApplicationName:(CDVInvokedUrlCommand *)command {
+    NSString *displayName = FBSDKSettings.displayName;
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:displayName];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 - (void)getLoginStatus:(CDVInvokedUrlCommand *)command {
     if (self.loginTracking == FBSDKLoginTrackingLimited) {
         [self returnLimitedLoginMethodError:command.callbackId];

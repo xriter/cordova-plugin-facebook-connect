@@ -264,7 +264,15 @@ public class ConnectPlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
-        if (action.equals("login")) {
+        if (action.equals("getApplicationId")) {
+            callbackContext.success(FacebookSdk.getApplicationId());
+            return true;
+
+        } else if (action.equals("getApplicationName")) {
+            callbackContext.success(FacebookSdk.getApplicationName());
+            return true;
+
+        } else if (action.equals("login")) {
             executeLogin(args, callbackContext);
             return true;
 

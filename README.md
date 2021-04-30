@@ -66,6 +66,16 @@ Please note that this plugin itself does not specify which Graph API version is 
 
 ## API
 
+### Get Application ID and Name
+
+`facebookConnectPlugin.getApplicationId(Function success)`
+
+Success function returns the current application ID.
+
+`facebookConnectPlugin.getApplicationName(Function success)`
+
+Success function returns the current application name.
+
 ### Login
 
 `facebookConnectPlugin.login(Array strings of permissions, Function success, Function failure)`
