@@ -8,7 +8,8 @@
 
 ## Features
 
-* Updated the Facebook JavaScript SDK used by the browser platform to v10.0
+* Updated the Facebook SDK to 11.0.0 for Android and iOS
+* Updated the Facebook JavaScript SDK used by the browser platform to v11.0
 * Updated the object returned by methods such as login to remove the `secret`, `session_key`, and `sig` properties, and add the new `data_access_expiration_time` property (closes [#49](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/49))
 
 <a name="2.3.0"></a>
