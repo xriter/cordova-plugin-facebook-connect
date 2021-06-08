@@ -60,7 +60,7 @@
 
 - (void) applicationDidBecomeActive:(NSNotification *) notification {
     if (FBSDKSettings.isAutoLogAppEventsEnabled) {
-        [FBSDKAppEvents activateApp];
+        [[FBSDKAppEvents alloc] activateApp];
     }
     if (self.applicationWasActivated == NO) {
         self.applicationWasActivated = YES;
@@ -650,7 +650,7 @@
 
 - (void) activateApp:(CDVInvokedUrlCommand *)command
 {
-    [FBSDKAppEvents activateApp];
+    [[FBSDKAppEvents alloc] activateApp];
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
