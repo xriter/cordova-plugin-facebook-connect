@@ -78,6 +78,46 @@
 
 #pragma mark - Cordova commands
 
+- (void)getApplicationId:(CDVInvokedUrlCommand *)command {
+    NSString *appID = FBSDKSettings.appID;
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:appID];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)setApplicationId:(CDVInvokedUrlCommand *)command {
+    if ([command.arguments count] == 0) {
+        // Not enough arguments
+        CDVPluginResult *res = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Invalid arguments"];
+        [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
+        return;
+    }
+    
+    NSString *appId = [command argumentAtIndex:0];
+    [FBSDKSettings setAppID:appId];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)getApplicationName:(CDVInvokedUrlCommand *)command {
+    NSString *displayName = FBSDKSettings.displayName;
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:displayName];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)setApplicationName:(CDVInvokedUrlCommand *)command {
+    if ([command.arguments count] == 0) {
+        // Not enough arguments
+        CDVPluginResult *res = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Invalid arguments"];
+        [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
+        return;
+    }
+    
+    NSString *displayName = [command argumentAtIndex:0];
+    [FBSDKSettings setDisplayName:displayName];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 - (void)getLoginStatus:(CDVInvokedUrlCommand *)command {
     if (self.loginTracking == FBSDKLoginTrackingLimited) {
         [self returnLimitedLoginMethodError:command.callbackId];

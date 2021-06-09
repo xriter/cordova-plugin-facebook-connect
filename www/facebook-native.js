@@ -1,5 +1,21 @@
 var exec = require('cordova/exec')
 
+exports.getApplicationId = function (s, f) {
+  exec(s, f, 'FacebookConnectPlugin', 'getApplicationId', [])
+}
+
+exports.setApplicationId = function (appId, s, f) {
+  exec(s, f, 'FacebookConnectPlugin', 'getApplicationId', [appId])
+}
+
+exports.getApplicationName = function (s, f) {
+  exec(s, f, 'FacebookConnectPlugin', 'getApplicationName', [])
+}
+
+exports.setApplicationName = function (appName, s, f) {
+  exec(s, f, 'FacebookConnectPlugin', 'getApplicationName', [appName])
+}
+
 exports.getLoginStatus = function (force, s, f) {
   if (typeof force === 'function') {
     s = force;
