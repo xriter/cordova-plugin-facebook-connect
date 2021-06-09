@@ -268,8 +268,16 @@ public class ConnectPlugin extends CordovaPlugin {
             callbackContext.success(FacebookSdk.getApplicationId());
             return true;
 
+        } else if (action.equals("setApplicationId")) {
+            executeSetApplicationId(args, callbackContext);
+            return true;
+
         } else if (action.equals("getApplicationName")) {
             callbackContext.success(FacebookSdk.getApplicationName());
+            return true;
+
+        } else if (action.equals("setApplicationName")) {
+            executeSetApplicationName(args, callbackContext);
             return true;
 
         } else if (action.equals("login")) {
@@ -355,6 +363,38 @@ public class ConnectPlugin extends CordovaPlugin {
             return true;
         }
         return false;
+    }
+
+    private void executeSetApplicationId(JSONArray args, CallbackContext callbackContext) {
+        if (args.length() == 0) {
+            // Not enough parameters
+            callbackContext.error("Invalid arguments");
+            return;
+        }
+
+        try {
+            String appId = args.getString(0);
+            FacebookSdk.setApplicationId(appId);
+            callbackContext.success();
+        } catch (JSONException e) {
+            callbackContext.error("Error setting application ID");
+        }
+    }
+
+    private void executeSetApplicationName(JSONArray args, CallbackContext callbackContext) {
+        if (args.length() == 0) {
+            // Not enough parameters
+            callbackContext.error("Invalid arguments");
+            return;
+        }
+
+        try {
+            String appName = args.getString(0);
+            FacebookSdk.setApplicationName(appName);
+            callbackContext.success();
+        } catch (JSONException e) {
+            callbackContext.error("Error setting application name");
+        }
     }
 
     private void executeGetDeferredApplink(JSONArray args,
