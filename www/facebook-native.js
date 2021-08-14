@@ -5,7 +5,7 @@ exports.getApplicationId = function (s, f) {
 }
 
 exports.setApplicationId = function (appId, s, f) {
-  exec(s, f, 'FacebookConnectPlugin', 'getApplicationId', [appId])
+  exec(s, f, 'FacebookConnectPlugin', 'setApplicationId', [appId])
 }
 
 exports.getApplicationName = function (s, f) {
@@ -13,7 +13,7 @@ exports.getApplicationName = function (s, f) {
 }
 
 exports.setApplicationName = function (appName, s, f) {
-  exec(s, f, 'FacebookConnectPlugin', 'getApplicationName', [appName])
+  exec(s, f, 'FacebookConnectPlugin', 'setApplicationName', [appName])
 }
 
 exports.getLoginStatus = function (force, s, f) {
