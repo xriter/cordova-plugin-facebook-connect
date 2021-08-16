@@ -11,7 +11,13 @@
 
 * Updated the Facebook SDK to 11.2.0 for Android and 11.1.0 for iOS
 * Updated the Facebook JavaScript SDK used by the browser platform to v11.0
-* Updated the object returned by methods such as login to remove the `secret`, `session_key`, and `sig` properties, and add the new `data_access_expiration_time` property (closes [#49](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/49))
+* Updated the object returned by methods such as `login` to remove the `secret`, `session_key`, and `sig` properties, and add the new `data_access_expiration_time` property (closes [#49](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/49))
+* Added new `getApplicationId`, `setApplicationId`, `getApplicationName`, and `setApplicationName` methods to allow for dynamically switching between app IDs in code (closes [#61](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/61))
+* Added new `OTHER_APP_SCHEMES` variable which is required for iOS when using `setApplicationId` to switch between multiple app IDs
+
+## Bug Fixes
+
+* Fixed an issue that would cause the *-Info.plist file to have a null value if FACEBOOK_URL_SCHEME_SUFFIX was null (closes [#77](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/77))
 
 <a name="2.3.0"></a>
 # [2.3.0](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/releases/tag/v2.3.0) (2021-04-21)
