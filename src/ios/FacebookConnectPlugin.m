@@ -255,14 +255,11 @@
         if (error) {
             // If the SDK has a message for the user, surface it.
             NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:errorMessage];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            [self returnLoginError:command.callbackId:errorMessage];
             return;
         } else if (result.isCancelled) {
-            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:@"User cancelled."];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorMessage = @"User cancelled.";
+            [self returnLoginError:command.callbackId:errorMessage];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                           messageAsDictionary:[self loginResponseObject]];
@@ -319,14 +316,11 @@
         if (error) {
             // If the SDK has a message for the user, surface it.
             NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:errorMessage];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            [self returnLoginError:command.callbackId:errorMessage];
             return;
         } else if (result.isCancelled) {
-            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:@"User cancelled."];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorMessage = @"User cancelled.";
+            [self returnLoginError:command.callbackId:errorMessage];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                           messageAsDictionary:[self limitedLoginResponseObject]];
@@ -399,14 +393,11 @@
     FBSDKLoginManagerLoginResultBlock reauthorizeHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
             NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:errorMessage];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            [self returnLoginError:command.callbackId:errorMessage];
             return;
         } else if (result.isCancelled) {
-            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:@"User cancelled."];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorMessage = @"User cancelled.";
+            [self returnLoginError:command.callbackId:errorMessage];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                           messageAsDictionary:[self loginResponseObject]];
@@ -624,14 +615,11 @@
         if (error) {
             // If the SDK has a message for the user, surface it.
             NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:errorMessage];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            [self returnLoginError:command.callbackId:errorMessage];
             return;
         } else if (result.isCancelled) {
-            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:@"User cancelled."];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorMessage = @"User cancelled.";
+            [self returnLoginError:command.callbackId:errorMessage];
             return;
         }
 
@@ -684,6 +672,12 @@
 }
 
 #pragma mark - Utility methods
+
+- (void) returnLoginError:(NSString *)callbackId:(NSString *)errorMessage {
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                     messageAsString:errorMessage];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+}
 
 - (void) returnLimitedLoginMethodError:(NSString *)callbackId {
     NSString *methodErrorMessage = @"Method not available when using Limited Login";
