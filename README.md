@@ -76,6 +76,22 @@ Success function returns the current application ID.
 
 Success function returns the current application name.
 
+### Set Application ID and Name
+
+`facebookConnectPlugin.setApplicationId(Function success)`
+
+Success function indicates the application ID has been updated.
+
+`facebookConnectPlugin.setApplicationName(Function success)`
+
+Success function indicates the application name has been updated.
+
+Note that in order to dynamically switch between multiple app IDs on iOS, you must use the *OTHER_APP_SCHEMES* variable and specify each app ID you will use with `setApplicationId`, e.g.
+
+```bash
+$ cordova plugin add cordova-plugin-facebook-connect --save --variable APP_ID="123456789" --variable APP_NAME="myApplication" --variable OTHER_APP_SCHEMES="fb987654321"
+```
+
 ### Login
 
 `facebookConnectPlugin.login(Array strings of permissions, Function success, Function failure)`

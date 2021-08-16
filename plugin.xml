@@ -20,6 +20,7 @@
     <preference name="APP_ID" />
     <preference name="APP_NAME" />
     <preference name="FACEBOOK_URL_SCHEME_SUFFIX" default=" " />
+    <preference name="OTHER_APP_SCHEMES" default=" " />
     <preference name="FACEBOOK_AUTO_LOG_APP_EVENTS" default="true" />
     <preference name="FACEBOOK_HYBRID_APP_EVENTS" default="false" />
     <preference name="FACEBOOK_ADVERTISER_ID_COLLECTION" default="true" />
@@ -129,6 +130,7 @@
               <key>CFBundleURLSchemes</key>
               <array>
                 <string>fb$APP_IDFACEBOOK_URL_SCHEME_SUFFIX_PLACEHOLDER</string>
+                <string>OTHER_APP_SCHEMES_PLACEHOLDER</string>
               </array>
             </dict>
           </array>
