@@ -47,6 +47,7 @@
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
+    NSLog(@"applicationDidFinishLaunching:");
     NSDictionary* launchOptions = notification.userInfo;
     if (launchOptions == nil) {
         //launchOptions is nil when not start because of notification or url open
@@ -59,8 +60,9 @@
 }
 
 - (void) applicationDidBecomeActive:(NSNotification *) notification {
+    NSLog(@"applicationDidBecomeActive:");
     if (FBSDKSettings.isAutoLogAppEventsEnabled) {
-        [[FBSDKAppEvents alloc] activateApp];
+        [FBSDKAppEvents activateApp];
     }
     if (self.applicationWasActivated == NO) {
         self.applicationWasActivated = YES;
@@ -678,7 +680,7 @@
 
 - (void) activateApp:(CDVInvokedUrlCommand *)command
 {
-    [[FBSDKAppEvents alloc] activateApp];
+    [FBSDKAppEvents activateApp];
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
