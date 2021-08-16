@@ -21,7 +21,7 @@
 @property (strong, nonatomic) NSString* gameRequestDialogCallbackId;
 @property (nonatomic, assign) BOOL applicationWasActivated;
 
-- (NSDictionary *)responseObject;
+- (NSDictionary *)loginResponseObject;
 - (NSDictionary *)limitedLoginResponseObject;
 - (NSDictionary *)profileObject;
 - (void)enableHybridAppEvents;
@@ -127,12 +127,12 @@
     if (force) {
         [FBSDKAccessToken refreshCurrentAccessToken:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                          messageAsDictionary:[self responseObject]];
+                                                          messageAsDictionary:[self loginResponseObject]];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }];
     } else {
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsDictionary:[self responseObject]];
+                                                      messageAsDictionary:[self loginResponseObject]];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
 }
@@ -265,7 +265,7 @@
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                          messageAsDictionary:[self responseObject]];
+                                                          messageAsDictionary:[self loginResponseObject]];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
     };
@@ -409,7 +409,7 @@
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                          messageAsDictionary:[self responseObject]];
+                                                          messageAsDictionary:[self loginResponseObject]];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
     };
@@ -711,7 +711,7 @@
     return topController;
 }
 
-- (NSDictionary *)responseObject {
+- (NSDictionary *)loginResponseObject {
 
     if (![FBSDKAccessToken currentAccessToken]) {
         return @{@"status": @"unknown"};
