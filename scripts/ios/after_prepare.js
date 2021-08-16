@@ -39,7 +39,7 @@ module.exports = function (context) {
   	FACEBOOK_URL_SCHEME_SUFFIX = getPreferenceValue("FACEBOOK_URL_SCHEME_SUFFIX")
   }
 
-  if(FACEBOOK_URL_SCHEME_SUFFIX === ' ') {
+  if(!FACEBOOK_URL_SCHEME_SUFFIX || FACEBOOK_URL_SCHEME_SUFFIX === ' ') {
     FACEBOOK_URL_SCHEME_SUFFIX = ''
   }
 
@@ -89,6 +89,9 @@ module.exports = function (context) {
 
       var plistContent = fs.readFileSync(plistPath, 'utf8')
 
+      if(FACEBOOK_URL_SCHEME_SUFFIX === '') {
+        plistContent = plistContent.replace('<key>FacebookUrlSchemeSuffix</key>', '').replace('<string>FACEBOOK_URL_SCHEME_SUFFIX_PLACEHOLDER</string>', '')
+      }
       plistContent = plistContent.replace(/FACEBOOK_URL_SCHEME_SUFFIX_PLACEHOLDER/g, FACEBOOK_URL_SCHEME_SUFFIX)
 
       if(plistContent.indexOf('<key>FacebookAutoLogAppEventsEnabled</key>') == -1) {
