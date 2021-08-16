@@ -47,7 +47,6 @@
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
-    NSLog(@"applicationDidFinishLaunching:");
     NSDictionary* launchOptions = notification.userInfo;
     if (launchOptions == nil) {
         //launchOptions is nil when not start because of notification or url open
@@ -60,7 +59,6 @@
 }
 
 - (void) applicationDidBecomeActive:(NSNotification *) notification {
-    NSLog(@"applicationDidBecomeActive:");
     if (FBSDKSettings.isAutoLogAppEventsEnabled) {
         [FBSDKAppEvents activateApp];
     }
