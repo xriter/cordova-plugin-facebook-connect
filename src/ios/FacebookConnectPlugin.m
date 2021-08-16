@@ -254,7 +254,7 @@
     FBSDKLoginManagerLoginResultBlock loginHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
             // If the SDK has a message for the user, surface it.
-            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
+            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
             [self returnLoginError:command.callbackId:errorMessage];
             return;
         } else if (result.isCancelled) {
@@ -315,7 +315,7 @@
     FBSDKLoginManagerLoginResultBlock loginHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
             // If the SDK has a message for the user, surface it.
-            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
+            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
             [self returnLoginError:command.callbackId:errorMessage];
             return;
         } else if (result.isCancelled) {
@@ -392,7 +392,7 @@
     
     FBSDKLoginManagerLoginResultBlock reauthorizeHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
-            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
+            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
             [self returnLoginError:command.callbackId:errorMessage];
             return;
         } else if (result.isCancelled) {
@@ -614,7 +614,7 @@
     [self loginWithPermissions:requestPermissions withHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
             // If the SDK has a message for the user, surface it.
-            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
+            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
             [self returnLoginError:command.callbackId:errorMessage];
             return;
         } else if (result.isCancelled) {
@@ -675,7 +675,7 @@
 
 - (void) returnLoginError:(NSString *)callbackId:(NSString *)errorMessage {
     NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
-    response[@"errorMessage"] = errorMessage;
+    response[@"errorMessage"] = errorMessage ?: @"There was a problem logging you in.";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
                                      messageAsString:response];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
