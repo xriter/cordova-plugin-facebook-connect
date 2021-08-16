@@ -254,12 +254,14 @@
     FBSDKLoginManagerLoginResultBlock loginHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
             // If the SDK has a message for the user, surface it.
+            NSString *errorCode = @"-2";
             NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
-            [self returnLoginError:command.callbackId:errorMessage];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
         } else if (result.isCancelled) {
+            NSString *errorCode = @"4201";
             NSString *errorMessage = @"User cancelled.";
-            [self returnLoginError:command.callbackId:errorMessage];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                           messageAsDictionary:[self loginResponseObject]];
@@ -315,12 +317,14 @@
     FBSDKLoginManagerLoginResultBlock loginHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
             // If the SDK has a message for the user, surface it.
+            NSString *errorCode = @"-2";
             NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
-            [self returnLoginError:command.callbackId:errorMessage];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
         } else if (result.isCancelled) {
+            NSString *errorCode = @"4201";
             NSString *errorMessage = @"User cancelled.";
-            [self returnLoginError:command.callbackId:errorMessage];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                           messageAsDictionary:[self limitedLoginResponseObject]];
@@ -392,12 +396,14 @@
     
     FBSDKLoginManagerLoginResultBlock reauthorizeHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
+            NSString *errorCode = @"-2";
             NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
-            [self returnLoginError:command.callbackId:errorMessage];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
         } else if (result.isCancelled) {
+            NSString *errorCode = @"4201";
             NSString *errorMessage = @"User cancelled.";
-            [self returnLoginError:command.callbackId:errorMessage];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                           messageAsDictionary:[self loginResponseObject]];
@@ -614,12 +620,14 @@
     [self loginWithPermissions:requestPermissions withHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
             // If the SDK has a message for the user, surface it.
+            NSString *errorCode = @"-2";
             NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
-            [self returnLoginError:command.callbackId:errorMessage];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
         } else if (result.isCancelled) {
+            NSString *errorCode = @"4201";
             NSString *errorMessage = @"User cancelled.";
-            [self returnLoginError:command.callbackId:errorMessage];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
         }
 
@@ -673,8 +681,9 @@
 
 #pragma mark - Utility methods
 
-- (void) returnLoginError:(NSString *)callbackId:(NSString *)errorMessage {
+- (void) returnLoginError:(NSString *)callbackId:(NSString *)errorCode:(NSString *)errorMessage {
     NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
+    response[@"errorCode"] = errorCode ?: @"-2";
     response[@"errorMessage"] = errorMessage ?: @"There was a problem logging you in.";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
                                      messageAsString:response];
