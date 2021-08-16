@@ -674,8 +674,10 @@
 #pragma mark - Utility methods
 
 - (void) returnLoginError:(NSString *)callbackId:(NSString *)errorMessage {
+    NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
+    response[@"errorMessage"] = errorMessage;
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                     messageAsString:errorMessage];
+                                     messageAsString:response];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
