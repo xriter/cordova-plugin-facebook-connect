@@ -86,10 +86,10 @@ Success function indicates the application ID has been updated.
 
 Success function indicates the application name has been updated.
 
-Note that in order to dynamically switch between multiple app IDs on iOS, you must use the *OTHER_APP_SCHEMES* variable and specify each app ID you will use with `setApplicationId`, e.g.
+Note that in order to dynamically switch between multiple app IDs on iOS, you must use the *OTHER_APP_SCHEMES* variable and specify each additional app ID you will use with `setApplicationId` separated by a comma, e.g.
 
 ```bash
-$ cordova plugin add cordova-plugin-facebook-connect --save --variable APP_ID="123456789" --variable APP_NAME="myApplication" --variable OTHER_APP_SCHEMES="fb987654321"
+$ cordova plugin add cordova-plugin-facebook-connect --save --variable APP_ID="123456789" --variable APP_NAME="myApplication" --variable OTHER_APP_SCHEMES="fb987654321,fb876543210,fb765432109"
 ```
 
 ### Login
