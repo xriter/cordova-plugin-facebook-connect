@@ -5,10 +5,11 @@
 
 * Dropped support for cordova-ios 5 (closes [#40](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/40))
 * Dropped support for iOS 8 and below (closes [#41](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/41))
+* Updated the `login` method error callback to return an object on iOS as on Android (closes [#19](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/19))
 
 ## Features
 
-* Updated the Facebook SDK to 11.1.1 for Android and 11.1.0 for iOS
+* Updated the Facebook SDK to 11.2.0 for Android and 11.1.0 for iOS
 * Updated the Facebook JavaScript SDK used by the browser platform to v11.0
 * Updated the object returned by methods such as login to remove the `secret`, `session_key`, and `sig` properties, and add the new `data_access_expiration_time` property (closes [#49](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/issues/49))
 
