@@ -109,7 +109,12 @@ Success function returns an Object like:
 		}
 	}
 
-Failure function returns an error String.
+Failure function returns an Object like:
+
+	{
+		errorCode: "4201",
+		errorMessage: "User cancelled"
+	}
 
 See the [Facebook Developer documentation](https://developers.facebook.com/docs/facebook-login/limited-login/ios/) for more details.
 
