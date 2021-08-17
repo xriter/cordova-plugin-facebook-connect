@@ -78,6 +78,8 @@ Success function returns the current application name.
 
 ### Set Application ID and Name
 
+By default, the APP_ID and APP_NAME provided when the plugin is added are used. If you instead need to set the application ID and name in code, you can do so. (You must still include an APP_ID and APP_NAME when adding the plugin, as the values are required for the Android manifest and *-Info.plist files.)
+
 `facebookConnectPlugin.setApplicationId(Function success)`
 
 Success function indicates the application ID has been updated.
