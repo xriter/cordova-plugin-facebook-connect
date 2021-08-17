@@ -1,5 +1,5 @@
 <a name="3.0.0"></a>
-# [3.0.0](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/releases/tag/v3.0.0)
+# [3.0.0](https://github.com/cordova-plugin-facebook-connect/cordova-plugin-facebook-connect/releases/tag/v3.0.0) (2021-08-17)
 
 ## Breaking Changes
 
