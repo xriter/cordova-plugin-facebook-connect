@@ -49,7 +49,7 @@ If you are looking to test the plugin, would like to reproduce a bug or build is
 
   * Cordova >= 5.0.0
   * cordova-android >= 7.0.0
-  * cordova-ios >= 5.0.0
+  * cordova-ios >= 6.0.0
   * cordova-browser >= 3.6
 
 ## Facebook SDK
@@ -66,6 +66,34 @@ Please note that this plugin itself does not specify which Graph API version is 
 
 ## API
 
+### Get Application ID and Name
+
+`facebookConnectPlugin.getApplicationId(Function success)`
+
+Success function returns the current application ID.
+
+`facebookConnectPlugin.getApplicationName(Function success)`
+
+Success function returns the current application name.
+
+### Set Application ID and Name
+
+By default, the APP_ID and APP_NAME provided when the plugin is added are used. If you instead need to set the application ID and name in code, you can do so. (You must still include an APP_ID and APP_NAME when adding the plugin, as the values are required for the Android manifest and *-Info.plist files.)
+
+`facebookConnectPlugin.setApplicationId(String id, Function success)`
+
+Success function indicates the application ID has been updated.
+
+`facebookConnectPlugin.setApplicationName(String name, Function success)`
+
+Success function indicates the application name has been updated.
+
+Note that in order to dynamically switch between multiple app IDs on iOS, you must use the *OTHER_APP_SCHEMES* variable and specify each additional app ID you will use with `setApplicationId` separated by a comma, e.g.
+
+```bash
+$ cordova plugin add cordova-plugin-facebook-connect --save --variable APP_ID="123456789" --variable APP_NAME="myApplication" --variable OTHER_APP_SCHEMES="fb987654321,fb876543210,fb765432109"
+```
+
 ### Login
 
 `facebookConnectPlugin.login(Array strings of permissions, Function success, Function failure)`
@@ -75,16 +103,19 @@ Success function returns an Object like:
 	{
 		status: "connected",
 		authResponse: {
-			session_key: true,
 			accessToken: "<long string>",
-			expiresIn: 5183979,
-			sig: "...",
-			secret: "...",
+			data_access_expiration_time: "1623680244",
+			expiresIn: "5183979",
 			userID: "634565435"
 		}
 	}
 
-Failure function returns an error String.
+  Failure function returns an Object like:
+
+  	{
+  		errorCode: "4201",
+  		errorMessage: "User cancelled"
+  	}
 
 ### Limited Login (iOS Only)
 
@@ -101,7 +132,12 @@ Success function returns an Object like:
 		}
 	}
 
-Failure function returns an error String.
+Failure function returns an Object like:
+
+	{
+		errorCode: "4201",
+		errorMessage: "User cancelled"
+	}
 
 See the [Facebook Developer documentation](https://developers.facebook.com/docs/facebook-login/limited-login/ios/) for more details.
 
@@ -144,11 +180,10 @@ Success function returns an Object like:
 ```
 {
 	authResponse: {
-		userID: "12345678912345",
 		accessToken: "kgkh3g42kh4g23kh4g2kh34g2kg4k2h4gkh3g4k2h4gk23h4gk2h34gk234gk2h34AndSoOn",
-		session_Key: true,
+		data_access_expiration_time: "1623680244",
 		expiresIn: "5183738",
-		sig: "..."
+		userID: "12345678912345"
 	},
 	status: "connected"
 }
@@ -175,11 +210,9 @@ Success function returns an Object like:
 	{
 		status: "connected",
 		authResponse: {
-			session_key: true,
 			accessToken: "<long string>",
-			expiresIn: 5183979,
-			sig: "...",
-			secret: "...",
+			data_access_expiration_time: "1623680244",
+			expiresIn: "5183979",
 			userID: "634565435"
 		}
 	}
@@ -368,8 +401,6 @@ $ cordova plugin add cordova-plugin-facebook-connect --save --variable APP_ID="1
 ```
 
 Please check [this repo](https://github.com/msencer/fb_hybrid_app_events_sample) for an example app using this feature.
-
-**NOTE(iOS):** This feature only works with WKWebView so if using an old version of Cordova, an additional plugin (e.g cordova-plugin-wkwebview-engine) is needed.
 
 ## GDPR Compliance
 

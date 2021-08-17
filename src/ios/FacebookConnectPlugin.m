@@ -21,10 +21,9 @@
 @property (strong, nonatomic) NSString* gameRequestDialogCallbackId;
 @property (nonatomic, assign) BOOL applicationWasActivated;
 
-- (NSDictionary *)responseObject;
+- (NSDictionary *)loginResponseObject;
 - (NSDictionary *)limitedLoginResponseObject;
 - (NSDictionary *)profileObject;
-- (NSDictionary*)parseURLParams:(NSString *)query;
 - (void)enableHybridAppEvents;
 @end
 
@@ -78,6 +77,46 @@
 
 #pragma mark - Cordova commands
 
+- (void)getApplicationId:(CDVInvokedUrlCommand *)command {
+    NSString *appID = FBSDKSettings.appID;
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:appID];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)setApplicationId:(CDVInvokedUrlCommand *)command {
+    if ([command.arguments count] == 0) {
+        // Not enough arguments
+        CDVPluginResult *res = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Invalid arguments"];
+        [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
+        return;
+    }
+    
+    NSString *appId = [command argumentAtIndex:0];
+    [FBSDKSettings setAppID:appId];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)getApplicationName:(CDVInvokedUrlCommand *)command {
+    NSString *displayName = FBSDKSettings.displayName;
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:displayName];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)setApplicationName:(CDVInvokedUrlCommand *)command {
+    if ([command.arguments count] == 0) {
+        // Not enough arguments
+        CDVPluginResult *res = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Invalid arguments"];
+        [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
+        return;
+    }
+    
+    NSString *displayName = [command argumentAtIndex:0];
+    [FBSDKSettings setDisplayName:displayName];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 - (void)getLoginStatus:(CDVInvokedUrlCommand *)command {
     if (self.loginTracking == FBSDKLoginTrackingLimited) {
         [self returnLimitedLoginMethodError:command.callbackId];
@@ -88,12 +127,12 @@
     if (force) {
         [FBSDKAccessToken refreshCurrentAccessToken:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                          messageAsDictionary:[self responseObject]];
+                                                          messageAsDictionary:[self loginResponseObject]];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }];
     } else {
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsDictionary:[self responseObject]];
+                                                      messageAsDictionary:[self loginResponseObject]];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
 }
@@ -215,18 +254,17 @@
     FBSDKLoginManagerLoginResultBlock loginHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
             // If the SDK has a message for the user, surface it.
-            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:errorMessage];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorCode = @"-2";
+            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
         } else if (result.isCancelled) {
-            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:@"User cancelled."];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorCode = @"4201";
+            NSString *errorMessage = @"User cancelled.";
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                          messageAsDictionary:[self responseObject]];
+                                                          messageAsDictionary:[self loginResponseObject]];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
     };
@@ -279,15 +317,14 @@
     FBSDKLoginManagerLoginResultBlock loginHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
             // If the SDK has a message for the user, surface it.
-            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:errorMessage];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorCode = @"-2";
+            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
         } else if (result.isCancelled) {
-            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:@"User cancelled."];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorCode = @"4201";
+            NSString *errorMessage = @"User cancelled.";
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                           messageAsDictionary:[self limitedLoginResponseObject]];
@@ -359,18 +396,17 @@
     
     FBSDKLoginManagerLoginResultBlock reauthorizeHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
-            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:errorMessage];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorCode = @"-2";
+            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
         } else if (result.isCancelled) {
-            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:@"User cancelled."];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorCode = @"4201";
+            NSString *errorMessage = @"User cancelled.";
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                          messageAsDictionary:[self responseObject]];
+                                                          messageAsDictionary:[self loginResponseObject]];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
     };
@@ -584,15 +620,14 @@
     [self loginWithPermissions:requestPermissions withHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
             // If the SDK has a message for the user, surface it.
-            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging you in.";
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:errorMessage];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorCode = @"-2";
+            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
         } else if (result.isCancelled) {
-            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                              messageAsString:@"User cancelled."];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            NSString *errorCode = @"4201";
+            NSString *errorMessage = @"User cancelled.";
+            [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
         }
 
@@ -646,6 +681,15 @@
 
 #pragma mark - Utility methods
 
+- (void) returnLoginError:(NSString *)callbackId:(NSString *)errorCode:(NSString *)errorMessage {
+    NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
+    response[@"errorCode"] = errorCode ?: @"-2";
+    response[@"errorMessage"] = errorMessage ?: @"There was a problem logging you in.";
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                     messageAsString:response];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+}
+
 - (void) returnLimitedLoginMethodError:(NSString *)callbackId {
     NSString *methodErrorMessage = @"Method not available when using Limited Login";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
@@ -672,7 +716,7 @@
     return topController;
 }
 
-- (NSDictionary *)responseObject {
+- (NSDictionary *)loginResponseObject {
 
     if (![FBSDKAccessToken currentAccessToken]) {
         return @{@"status": @"unknown"};
@@ -681,20 +725,23 @@
     NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
     FBSDKAccessToken *token = [FBSDKAccessToken currentAccessToken];
 
+    NSTimeInterval dataAccessExpirationTimeInterval = token.dataAccessExpirationDate.timeIntervalSince1970;
+    NSString *dataAccessExpirationTime = @"0";
+    if (dataAccessExpirationTimeInterval > 0) {
+        dataAccessExpirationTime = [NSString stringWithFormat:@"%0.0f", dataAccessExpirationTimeInterval];
+    }
+
     NSTimeInterval expiresTimeInterval = token.expirationDate.timeIntervalSinceNow;
     NSString *expiresIn = @"0";
     if (expiresTimeInterval > 0) {
         expiresIn = [NSString stringWithFormat:@"%0.0f", expiresTimeInterval];
     }
 
-
     response[@"status"] = @"connected";
     response[@"authResponse"] = @{
                                   @"accessToken" : token.tokenString ? token.tokenString : @"",
+                                  @"data_access_expiration_time" : dataAccessExpirationTime,
                                   @"expiresIn" : expiresIn,
-                                  @"secret" : @"...",
-                                  @"session_key" : [NSNumber numberWithBool:YES],
-                                  @"sig" : @"...",
                                   @"userID" : token.userID ? token.userID : @""
                                   };
 
@@ -757,57 +804,8 @@
     return [response copy];
 }
 
-/**
- * A method for parsing URL parameters.
- */
-- (NSDictionary*)parseURLParams:(NSString *)query {
-    NSString *regexStr = @"^(.+)\\[(.*)\\]$";
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:regexStr options:0 error:nil];
-
-    NSArray *pairs = [query componentsSeparatedByString:@"&"];
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    [pairs enumerateObjectsUsingBlock:
-     ^(NSString *pair, NSUInteger idx, BOOL *stop) {
-         NSArray *kv = [pair componentsSeparatedByString:@"="];
-
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_9_0
-         NSString *key = [kv[0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-         NSString *val = [kv[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-#else
-         NSString *key = [kv[0] stringByRemovingPercentEncoding];
-         NSString *val = [kv[1] stringByRemovingPercentEncoding];
-#endif
-
-         NSArray *matches = [regex matchesInString:key options:0 range:NSMakeRange(0, [key length])];
-         if ([matches count] > 0) {
-             for (NSTextCheckingResult *match in matches) {
-
-                 NSString *newKey = [key substringWithRange:[match rangeAtIndex:1]];
-
-                 if ([[params allKeys] containsObject:newKey]) {
-                     NSMutableArray *obj = [params objectForKey:newKey];
-                     [obj addObject:val];
-                     [params setObject:obj forKey:newKey];
-                 } else {
-                     NSMutableArray *obj = [NSMutableArray arrayWithObject:val];
-                     [params setObject:obj forKey:newKey];
-                 }
-             }
-         } else {
-             params[key] = val;
-         }
-         // params[kv[0]] = val;
-    }];
-    return params;
-}
-
-
 /*
  * Enable the hybrid app events for the webview.
- * This feature only works with WKWebView so until
- * Cordova iOS 5 is relased
- * (https://cordova.apache.org/news/2018/08/01/future-cordova-ios-webview.html),
- * an additional plugin (e.g cordova-plugin-wkwebview-engine) is needed.
  */
 - (void)enableHybridAppEvents {
     if ([self.webView isMemberOfClass:[WKWebView class]]){
@@ -933,11 +931,9 @@ void FBMethodSwizzle(Class c, SEL originalSelector) {
 
 + (void)load
 {
-    FBMethodSwizzle([self class], @selector(application:openURL:sourceApplication:annotation:));
     FBMethodSwizzle([self class], @selector(application:openURL:options:));
 }
 
-// This method is a duplicate of the other openURL method below, except using the newer iOS (9) API.
 - (BOOL)swizzled_application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options {
     if (!url) {
         return NO;
@@ -954,25 +950,8 @@ void FBMethodSwizzle(Class c, SEL originalSelector) {
     return [self swizzled_application:application openURL:url options:options];
 }
 
-- (BOOL)noop_application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+- (BOOL)noop_application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
 {
     return NO;
-}
-
-- (BOOL)swizzled_application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
-    if (!url) {
-        return NO;
-    }
-    // Required by FBSDKCoreKit for deep linking/to complete login
-    [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
-
-    // NOTE: Cordova will run a JavaScript method here named handleOpenURL. This functionality is deprecated
-    // but will cause you to see JavaScript errors if you do not have window.handleOpenURL defined:
-    // https://github.com/Wizcorp/phonegap-facebook-plugin/issues/703#issuecomment-63748816
-    NSLog(@"FB handle url using application:openURL:sourceApplication:annotation: %@", url);
-    
-    // Call existing method
-    return [self swizzled_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 @end

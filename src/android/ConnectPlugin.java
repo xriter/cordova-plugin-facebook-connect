@@ -264,7 +264,23 @@ public class ConnectPlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
-        if (action.equals("login")) {
+        if (action.equals("getApplicationId")) {
+            callbackContext.success(FacebookSdk.getApplicationId());
+            return true;
+
+        } else if (action.equals("setApplicationId")) {
+            executeSetApplicationId(args, callbackContext);
+            return true;
+
+        } else if (action.equals("getApplicationName")) {
+            callbackContext.success(FacebookSdk.getApplicationName());
+            return true;
+
+        } else if (action.equals("setApplicationName")) {
+            executeSetApplicationName(args, callbackContext);
+            return true;
+
+        } else if (action.equals("login")) {
             executeLogin(args, callbackContext);
             return true;
 
@@ -347,6 +363,38 @@ public class ConnectPlugin extends CordovaPlugin {
             return true;
         }
         return false;
+    }
+
+    private void executeSetApplicationId(JSONArray args, CallbackContext callbackContext) {
+        if (args.length() == 0) {
+            // Not enough parameters
+            callbackContext.error("Invalid arguments");
+            return;
+        }
+
+        try {
+            String appId = args.getString(0);
+            FacebookSdk.setApplicationId(appId);
+            callbackContext.success();
+        } catch (JSONException e) {
+            callbackContext.error("Error setting application ID");
+        }
+    }
+
+    private void executeSetApplicationName(JSONArray args, CallbackContext callbackContext) {
+        if (args.length() == 0) {
+            // Not enough parameters
+            callbackContext.error("Invalid arguments");
+            return;
+        }
+
+        try {
+            String appName = args.getString(0);
+            FacebookSdk.setApplicationName(appName);
+            callbackContext.success();
+        } catch (JSONException e) {
+            callbackContext.error("Error setting application name");
+        }
     }
 
     private void executeGetDeferredApplink(JSONArray args,
@@ -834,15 +882,15 @@ public class ConnectPlugin extends CordovaPlugin {
         String response;
         final AccessToken accessToken = AccessToken.getCurrentAccessToken();
         if (hasAccessToken()) {
+            long dataAccessExpirationTimeInterval = accessToken.getDataAccessExpirationTime().getTime() / 1000L;
             Date today = new Date();
             long expiresTimeInterval = (accessToken.getExpires().getTime() - today.getTime()) / 1000L;
             response = "{"
                 + "\"status\": \"connected\","
                 + "\"authResponse\": {"
                 + "\"accessToken\": \"" + accessToken.getToken() + "\","
+                + "\"data_access_expiration_time\": \"" + Math.max(dataAccessExpirationTimeInterval, 0) + "\","
                 + "\"expiresIn\": \"" + Math.max(expiresTimeInterval, 0) + "\","
-                + "\"session_key\": true,"
-                + "\"sig\": \"...\","
                 + "\"userID\": \"" + accessToken.getUserId() + "\""
                 + "}"
                 + "}";
