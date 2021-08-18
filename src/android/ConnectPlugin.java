@@ -882,15 +882,15 @@ public class ConnectPlugin extends CordovaPlugin {
         String response;
         final AccessToken accessToken = AccessToken.getCurrentAccessToken();
         if (hasAccessToken()) {
+            long dataAccessExpirationTimeInterval = accessToken.getDataAccessExpirationTime().getTime() / 1000L;
             Date today = new Date();
             long expiresTimeInterval = (accessToken.getExpires().getTime() - today.getTime()) / 1000L;
             response = "{"
                 + "\"status\": \"connected\","
                 + "\"authResponse\": {"
                 + "\"accessToken\": \"" + accessToken.getToken() + "\","
+                + "\"data_access_expiration_time\": \"" + Math.max(dataAccessExpirationTimeInterval, 0) + "\","
                 + "\"expiresIn\": \"" + Math.max(expiresTimeInterval, 0) + "\","
-                + "\"session_key\": true,"
-                + "\"sig\": \"...\","
                 + "\"userID\": \"" + accessToken.getUserId() + "\""
                 + "}"
                 + "}";

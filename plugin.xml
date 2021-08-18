@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="cordova-plugin-facebook-connect"
-        version="2.3.0">
+        version="3.0.0">
 
     <name>Facebook Connect</name>
 
@@ -20,16 +20,17 @@
     <preference name="APP_ID" />
     <preference name="APP_NAME" />
     <preference name="FACEBOOK_URL_SCHEME_SUFFIX" default=" " />
+    <preference name="OTHER_APP_SCHEMES" default=" " />
     <preference name="FACEBOOK_AUTO_LOG_APP_EVENTS" default="true" />
     <preference name="FACEBOOK_HYBRID_APP_EVENTS" default="false" />
     <preference name="FACEBOOK_ADVERTISER_ID_COLLECTION" default="true" />
-    <preference name="FACEBOOK_ANDROID_SDK_VERSION" default="9.1.1"/>
-    <preference name="FACEBOOK_IOS_SDK_VERSION" default="9.2.0"/>
-    <preference name="FACEBOOK_BROWSER_SDK_VERSION" default="v9.0" />
+    <preference name="FACEBOOK_ANDROID_SDK_VERSION" default="11.2.0"/>
+    <preference name="FACEBOOK_IOS_SDK_VERSION" default="11.1.0"/>
+    <preference name="FACEBOOK_BROWSER_SDK_VERSION" default="v11.0" />
 
     <engines>
         <engine name="cordova-android" version=">=7.0.0" />
-        <engine name="cordova-ios" version=">=5.0.0" />
+        <engine name="cordova-ios" version=">=6.0.0" />
     </engines>
 
     <!-- android -->
@@ -129,6 +130,7 @@
               <key>CFBundleURLSchemes</key>
               <array>
                 <string>fb$APP_IDFACEBOOK_URL_SCHEME_SUFFIX_PLACEHOLDER</string>
+                <string>OTHER_APP_SCHEMES_PLACEHOLDER</string>
               </array>
             </dict>
           </array>
@@ -184,7 +186,6 @@
             </pods>
         </podspec>
 
-        <hook type="before_plugin_install" src="scripts/ios/before_plugin_install.js" />
         <hook type="after_prepare" src="scripts/ios/after_prepare.js" />
     </platform>
 
